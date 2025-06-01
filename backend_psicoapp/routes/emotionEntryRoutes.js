@@ -1,12 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const emotionEntryController = require('../controllers/emotionEntryController');
+const router = require('express').Router();
+import { addEntry, getByUser } from '../controllers/emotionEntryController';
 
-router.get('/psicologa/all', emotionEntryController.getAllEntriesForPsychologist);
-router.get('/paciente/:pacienteId', emotionEntryController.getEntriesByPatient);
-router.post('/', emotionEntryController.createEntry);
-router.get('/:id', emotionEntryController.getEntryById);
-router.put('/:id', emotionEntryController.updateEntry);
-router.delete('/:id', emotionEntryController.deleteEntry);
+router.post('/add', addEntry);
+router.get('/paciente/:id', getByUser);
 
-module.exports = router;
+export default router;
