@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import React, { useState } from "react";
+import { View, Text, TextInput, Button, Alert, ActivityIndicator, ScrollView, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from "react-native";
+import { cadastroStyles } from '../styles/cadastroStyles';
+import { API_URL } from "../config";
 
 export default function CadastroScreen({ navigation }) {
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [confirmarSenha, setConfirmarSenha] = useState('');
+    const [tipoUsuario, setTipoUsuario] = useState('paciente');
+    const [accessKey, setAccessKey] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const registrar = async () => {
+    const cadastrar = async () => {
         if (!nome || !email || !senha || !confirmarSenha) {
             Alert.alert('Erro de Cadastro', 'Por favor, preencha todos os campos.');
             return;
@@ -24,87 +28,76 @@ export default function CadastroScreen({ navigation }) {
             return;
         }
 
-        setLoading(true); 
+        const body = { nome, email, senha, tipoUsuario };
+        if (tipoUsuario === 'psicologo') body.accessKey = accessKey;
+
+        setLoading(true);
         try {
-            await new Promise(resolve => setTimeout(resolve, 1500)); 
+            const response = await fetch(`${API_URL}/auth/register`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(body)
+            });
+            const data = await response.json();
 
-            Alert.alert(
-                'Sucesso',
-                'Cadastro realizado com sucesso! Agora você pode fazer login.',
-                [{ text: 'OK', onPress: () => navigation.goBack() }] 
-            );
-
+            if (response.ok) {
+                Alert.alert('Sucesso', data.message, [{text: 'Ir para login', onPress: () => navigation.goBack()}]);
+            } else {
+                Alert.alert('Erro ao se cadastrar', data.message);
+            }
         } catch (error) {
-            console.error('Erro ao tentar registrar:', error);
-            Alert.alert('Erro de Cadastro', 'Ocorreu um erro ao tentar registrar. Tente novamente mais tarde.');
+            console.error('Erro ao cadastrar: ', error);
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.titulo}>Criar Nova Conta</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Nome Completo"
-                value={nome}
-                onChangeText={setNome}
-                autoCapitalize="words" 
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="E-mail"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Senha"
-                secureTextEntry
-                value={senha}
-                onChangeText={setSenha}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Confirmar Senha"
-                secureTextEntry
-                value={confirmarSenha}
-                onChangeText={setConfirmarSenha}
-            />
-            {loading ? (
-                <ActivityIndicator size="large" color="#007BFF" />
-            ) : (
-                <Button title="Registrar" onPress={registrar} />
-            )}
-        </View>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <KeyboardAvoidingView 
+                behavior="height"
+                style={cadastroStyles.container}
+            >
+                <ScrollView contentContainerStyle={cadastroStyles.contentContainer}>
+                    <Text style={cadastroStyles.titulo}>Cadastro</Text>
+                    <TextInput style={cadastroStyles.input} 
+                        placeholder="Nome" 
+                        value={nome} 
+                        onChangeText={setNome} 
+                    />
+                    <TextInput style={cadastroStyles.input} 
+                        placeholder="E-mail" 
+                        value={email} 
+                        onChangeText={setEmail} 
+                    />
+                    <TextInput style={cadastroStyles.input} 
+                        placeholder="Senha" 
+                        secureTextEntry
+                        value={senha} 
+                        onChangeText={setSenha} 
+                    />
+                    <TextInput style={cadastroStyles.input} 
+                        placeholder="Confirmar Senha" 
+                        secureTextEntry
+                        value={confirmarSenha} 
+                        onChangeText={setConfirmarSenha} 
+                    />
+                    <Button title={tipoUsuario} onPress={() => setTipoUsuario(tipoUsuario === 'paciente' ? 'psicologo' : 'paciente')} />
+                    <View style={{ marginBottom: 10 }} />
+                    {tipoUsuario === 'psicologo' && 
+                        <TextInput style={cadastroStyles.input} 
+                            placeholder="Chave de Acesso" 
+                            value={accessKey} 
+                            onChangeText={setAccessKey}
+                        />
+                    }
+                    {loading ? (
+                        <ActivityIndicator size='large' color='#007BFF' />
+                    ) : (
+                        <Button title="Cadastrar" onPress={cadastrar} />
+                    )}
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        padding: 20,
-        backgroundColor: '#e6f0f2' 
-    },
-    titulo: {
-        fontSize: 28, 
-        fontWeight: 'bold',
-        marginBottom: 30,
-        textAlign: 'center',
-        color: '#333'
-    },
-    input: {
-        backgroundColor: '#fff',
-        paddingHorizontal: 15,
-        paddingVertical: 12,
-        marginBottom: 15,
-        borderRadius: 8,
-        fontSize: 16,
-        borderWidth: 1,
-        borderColor: '#ddd'
-    }
-});

@@ -1,6 +1,6 @@
-import FeedbackEntry from "../models/FeedbackEntry";
+import FeedbackEntry from "../models/FeedbackEntry.js";
 
-exports.addFeedback = async (req, res) => {
+export const addFeedback = async (req, res) => {
     const { user, estresse, ansiedade, tristeza, desanimo } = req.body;
     const total = estresse + ansiedade + tristeza + desanimo;
 
@@ -13,6 +13,7 @@ exports.addFeedback = async (req, res) => {
     res.status(201).json(novoFeedback);
 };
 
-exports.getByUser = async (req, res) => {
-    const entradas = await FeedbackEntry.find({ user: req.params.userId }).sort({ date: -1 });
+export const getByUser = async (req, res) => {
+    const entradas = await FeedbackEntry.find({ user: req.params.id }).sort({ date: -1 });
+    res.status(200).json(entradas);
 };

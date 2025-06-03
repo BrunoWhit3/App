@@ -1,5 +1,5 @@
-import Sessao from "../models/Sessao";
-import Financias from "../models/Financias";
+import Sessao from "../models/Sessao.js";
+import Financias from "../models/Financias.js";
 
 function calcularImposto(valor) {
     if (valor <= 2259.20) return 0;
@@ -9,28 +9,28 @@ function calcularImposto(valor) {
     return valor * 0.275;
 }
 
-exports.create = async (req, res) => {
+export const create = async (req, res) => {
     const novaSessao = new Sessao(req.body);
     await novaSessao.save();
     res.status(201).json(novaSessao);
 };
 
-exports.getByPacient = async (req, res) => {
+export const getByPaciente = async (req, res) => {
     const sessoes = await Sessao.find({ paciente: req.params.id }).sort({ date: -1 });
     res.status(200).json(sessoes);
 };
 
-exports.update = async (req, res) => {
+export const update = async (req, res) => {
     const atualizado = await Sessao.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.status(200).json(atualizado);
 };
 
-exports.cancel = async (req, res) => {
+export const cancel = async (req, res) => {
     const cancelado = await Sessao.findByIdAndUpdate(req.params.id, { status: 'cancelado' }, { new: true });
     res.status(200).json(cancelado);
 };
 
-exports.completeSession = async (req, res) => {
+export const completeSession = async (req, res) => {
     const { pagamento } = req.body;
     try {
         const imposto = calcularImposto(pagamento);

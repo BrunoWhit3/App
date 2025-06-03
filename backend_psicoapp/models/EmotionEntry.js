@@ -6,9 +6,14 @@ const EmotionEntrySchema = new Schema({
         ref: 'User',
         required: true
     },
-    dataRegistro: { type: Date, default: Date.now, required: true },
-    humorGeral: { type: String, required: true, trim: true },
-    descricao: { type: String, required: true, trim: true }
+    text: {
+        type: String,
+        required: true
+    },
+    date: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 export default model('EmotionEntry', EmotionEntrySchema);

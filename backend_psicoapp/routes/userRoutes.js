@@ -1,5 +1,7 @@
-const router = require('express').Router();
-import User from '../models/User';
+import express from 'express';
+import User from '../models/User.js';
+
+const router = express.Router();
 
 router.get('/pacientes', async (req, res) => {
     const pacientes = await User.find({ tipoUsuario: 'paciente' });

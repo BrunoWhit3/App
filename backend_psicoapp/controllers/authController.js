@@ -1,7 +1,7 @@
-import User from "../models/User";
+import User from "../models/User.js";
 const PSICOLOGO_KEY = 'CHAVE-SECRETA-123';
 
-exports.register = async (req, res) => {
+export const register = async (req, res) => {
     const { nome, email, senha, tipoUsuario, accessKey } = req.body;
     if (tipoUsuario === 'psicologo' && accessKey !== PSICOLOGO_KEY) {
         return res.status(403).json({ message: 'Chave inválida' });
@@ -15,7 +15,7 @@ exports.register = async (req, res) => {
     res.status(201).json({ message: 'Cadastrado com sucesso' });
 };
 
-exports.login = async (req, res) => {
+export const login = async (req, res) => {
     const { email, senha } = req.body;
     const user = await User.findOne({ email });
     if (!user || user.senha !== senha) {

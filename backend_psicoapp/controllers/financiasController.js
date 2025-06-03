@@ -1,6 +1,6 @@
-import Financias from "../models/Financias";
+import Financias from "../models/Financias.js";
 
-exports.getByPsicologo = async (req, res) => {
+export const getByPsicologo = async (req, res) => {
     const relatorios = await Financias.find({ psicologo: req.params.psicologo })
         .populate('paciente').populate('psicologo')
         .sort({ date: -1 });
