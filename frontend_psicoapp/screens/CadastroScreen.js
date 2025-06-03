@@ -82,8 +82,6 @@ export default function CadastroScreen({ navigation }) {
                         value={confirmarSenha} 
                         onChangeText={setConfirmarSenha} 
                     />
-                    <Button title={tipoUsuario} onPress={() => setTipoUsuario(tipoUsuario === 'paciente' ? 'psicologo' : 'paciente')} />
-                    <View style={{ marginBottom: 10 }} />
                     {tipoUsuario === 'psicologo' && 
                         <TextInput style={cadastroStyles.input} 
                             placeholder="Chave de Acesso" 
@@ -91,6 +89,8 @@ export default function CadastroScreen({ navigation }) {
                             onChangeText={setAccessKey}
                         />
                     }
+                    <Button title={tipoUsuario} onPress={() => setTipoUsuario(tipoUsuario === 'paciente' ? 'psicologo' : 'paciente')} />
+                    <View style={{ marginBottom: 10 }} />
                     {loading ? (
                         <ActivityIndicator size='large' color='#007BFF' />
                     ) : (

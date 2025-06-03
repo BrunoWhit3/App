@@ -25,5 +25,12 @@ export const pacienteDetalheStyles = StyleSheet.create({
         borderRadius: 5,
         padding: 10,
         marginBottom: 10
+    },
+    noRecordsText: {
+        textAlign: 'center',
+        marginTop: 20,
+        fontSize: 16,
+        color: '#777',
+        fontStyle: 'italic',
     }
 });

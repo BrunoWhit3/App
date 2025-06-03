@@ -36,7 +36,7 @@ export const completeSession = async (req, res) => {
         const imposto = calcularImposto(pagamento);
         const sessao = await Sessao.findByIdAndUpdate(req.params.id, { status: 'finalizada', pagamento, imposto }, { new: true })
             .populate('paciente').populate('psicologo');
-        novoRelatorio = new Financias({
+        const novoRelatorio = new Financias({
             psicologo: sessao.psicologo._id,
             paciente: sessao.paciente._id, pagamento,
             imposto: imposto,

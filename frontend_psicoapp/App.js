@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -47,10 +46,10 @@ export default function App() {
                   <Stack.Screen name="Feedback" component={FeedbackScreen} options={{title: 'Feedback Emocional'}} />
                   <Stack.Screen name="FeedbackUser" component={FeedbackUserScreen} options={{title: 'Histórico de Feedbacks'}} />
                   <Stack.Screen name="Financias" component={FinanciasScreen} options={{title: 'Histórico Financeiro'}} />
-                  {/* <Stack.Screen name="PacientesList" component={PacientesListScreen} options={{title: 'Lista de Pacientes'}} /> */}
-                  {/* <Stack.Screen name="PacienteDetalhe" component={PacienteDetalheScreen} options={{title: 'Detalhes do Paciente'}} /> */}
-                  {/* <Stack.Screen name="DiarioPaciente" component={DiarioPacienteScreen} options={{title: 'Diário do Paciente'}} /> */}
-                  {/* <Stack.Screen name="FeedbackPaciente" component={FeedbackPacienteScreen} options={{title: 'Feedbacks do Paciente'}} /> */}
+                  <Stack.Screen name="PacientesList" component={PacientesListScreen} options={{title: 'Lista de Pacientes'}} />
+                  <Stack.Screen name="PacienteDetalhe" component={PacienteDetalheScreen} options={{title: 'Sessões Agendadas'}} />
+                  <Stack.Screen name="DiarioPaciente" component={DiarioPacienteScreen} options={{title: 'Diário do Paciente'}} />
+                  <Stack.Screen name="FeedbackPaciente" component={FeedbackPacienteScreen} options={{title: 'Feedbacks do Paciente'}} />
                 </>
               ) : (
                 <>

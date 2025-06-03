@@ -3,6 +3,6 @@ import { getByPsicologo } from '../controllers/financiasController.js';
 
 const router = express.Router();
 
-router.get('/:psicologo', getByPsicologo);
+router.get('/:id', getByPsicologo);
 
 export default router;

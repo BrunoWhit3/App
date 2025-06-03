@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { View, Text, FlatList, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import { UserContext } from "../userContext";
 import { API_URL } from "../config";
 import { diarioPacienteStyles } from '../styles/diarioPacienteStyles';

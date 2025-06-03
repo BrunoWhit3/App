@@ -30,7 +30,7 @@ export default function HomeScreen({ navigation }) {
         <View style={homeStyles.container}>
             <Text style={homeStyles.welcome}>Bem-vindo, {user.nome}</Text>
             {user.tipoUsuario === 'psicologo' ? (
-                <Button title="Ver Pacientes" />
+                <Button title="Ver Pacientes" onPress={() => navigation.navigate('PacientesList')} />
             ) : (
                 <>
                     <Button title="Meu Diário" onPress={() => navigation.navigate('Diario')} />
