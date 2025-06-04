@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
-import { View, Text, Button, Alert, TouchableOpacity } from "react-native";
+import { View, Alert } from "react-native";
+import { Text, Button, Surface } from "react-native-paper";
 import { homeStyles } from '../styles/homeStyles';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserContext } from "../userContext";
@@ -27,20 +28,30 @@ export default function HomeScreen({ navigation }) {
     };
 
     return (
-        <View style={homeStyles.container}>
-            <Text style={homeStyles.welcome}>Bem-vindo, {user.nome}</Text>
+        <Surface style={homeStyles.container}>
+            <Text variant="headlineMedium" style={homeStyles.welcome}>
+                Bem-vindo, {user.nome} 
+            </Text>
             {user.tipoUsuario === 'psicologo' ? (
-                <Button title="Ver Pacientes" onPress={() => navigation.navigate('PacientesList')} />
+                <Button mode="contained" style={homeStyles.button} onPress={() => navigation.navigate('PacientesList')}>
+                    Ver lista de Pacientes
+                </Button>
             ) : (
                 <>
-                    <Button title="Meu Diário" onPress={() => navigation.navigate('Diario')} />
-                    <Button title="Feedback dos seus sentimentos" onPress={() => navigation.navigate('Feedback')} />
+                    <Button mode="contained" style={homeStyles.button} onPress={() => navigation.navigate('Diario')}>
+                        Meu Diário
+                    </Button>
+                    <Button mode="contained" style={homeStyles.button} onPress={() => navigation.navigate('Feedback')}>
+                        Feedback dos seus sentimentos
+                    </Button>
                 </>
             )}
-            <Button title="Relatórios Financeiros" onPress={() => navigation.navigate('Financias')} />
-            <TouchableOpacity onPress={handleLogout}>
-                <Text style={homeStyles.link}>Sair</Text>
-            </TouchableOpacity>
-        </View>
+            <Button mode="contained" style={homeStyles.button} onPress={() => navigation.navigate('Financias')}>
+                Relatórios Financeiros
+            </Button>
+            <Button mode="text" onPress={handleLogout} style={homeStyles.logout}>
+                Sair
+            </Button>
+        </Surface>
     );
 }

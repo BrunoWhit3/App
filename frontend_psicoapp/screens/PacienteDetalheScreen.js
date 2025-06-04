@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../userContext";
 import { API_URL } from "../config";
-import { View, Text, TextInput, Button, FlatList, Modal, ActivityIndicator } from "react-native";
+import { View, FlatList, Modal, ScrollView, KeyboardAvoidingView } from "react-native";
+import { Text, TextInput, ActivityIndicator, Button, Card, Portal, Dialog, Provider as PaperProvider } from "react-native-paper";
 import { pacienteDetalheStyles } from '../styles/pacienteDetalheStyles';
-import { modalStyles } from '../styles/modalStyles';
 import { loadingStyles } from "../styles/loadingStyles";
 
 export default function PacienteDetalheScreen({ route }) {
@@ -100,27 +100,24 @@ export default function PacienteDetalheScreen({ route }) {
     };
 
     const renderItem = ({ item }) => (
-        <View style={pacienteDetalheStyles.entry}>
-            {item.status === 'cancelado' ? (
-                <>
-                    <Text>{new Date(item.date).toLocaleDateString()} - {item.status}</Text>
-                    <Text>Sessão Desmarcada</Text>
-                </>
-            ) : item.status === 'finalizada' ? (
-                <>
-                    <Text>{new Date(item.date).toLocaleDateString()} - {item.status}</Text>
-                    <Text>Sessão Finalizada</Text>
-                </>
-            ) : (
-                <>
-                    <Text>{new Date(item.date).toLocaleDateString()} - {item.status}</Text>
-                    <Button title="Editar" onPress={() => abrirModal('editar', item)} />
-                    <Button title="Cancelar" color='red' onPress={() => abrirModal('cancelar', item)} />
-                    <Button title="Finalizar" onPress={() => abrirModal('finalizar', item)} />
-                </>
-            )}
-        </View>
-    )
+        <Card style={pacienteDetalheStyles.card} mode="outlined">
+            <Card.Content>
+                <Text variant="titleMedium" style={{ marginBottom: 4 }}>
+                    {new Date(item.date).toLocaleDateString()} - {item.status}
+                </Text>
+                {item.status === "cancelado" && <Text variant="bodySmall" style={{ color: 'red' }}>Sessão Desmarcada</Text>}
+                {item.status === "finalizada" && <Text variant="bodySmall" style={{ color: 'gray' }}>Sessão Finalizada</Text>}
+                {item.status === "marcada" && (
+                    <View style={{ marginTop: 12, gap: 8 }}>
+                        <Button mode="outlined" style={pacienteDetalheStyles.button} onPress={() => abrirModal('editar', item)}>Editar</Button>
+                        <Button mode="outlined" style={pacienteDetalheStyles.button} textColor="red" onPress={() => abrirModal('cancelar', item)}>Cancelar</Button>
+                        <Button mode="outlined" style={pacienteDetalheStyles.button} onPress={() => abrirModal('finalizar', item)}>Finalizar</Button>
+                    </View>
+                )}
+            </Card.Content>
+        </Card>
+
+    );
 
     if (loading) {
         return (
@@ -132,82 +129,120 @@ export default function PacienteDetalheScreen({ route }) {
     }
 
     return (
-        <View style={pacienteDetalheStyles.container}>
-            <Text>Nome: {paciente.nome}</Text>
-            <Text style={pacienteDetalheStyles.sectionTitulo}>Sessões:</Text>
-            <FlatList 
-                data={sessoes}
-                keyExtractor={(item) => item._id}
-                renderItem={renderItem}
-                contentContainerStyle={{ paddingBottom: 20 }}
-                ListEmptyComponent={() => (
-                    <Text style={pacienteDetalheStyles.noRecordsText}>Nenhuma sessão encontrada.</Text>
-                )}
-            />
-            <Text style={pacienteDetalheStyles.sectionTitulo}>Agendar nova sessão:</Text>
-            <TextInput 
-                placeholder="Data (YYYY-MM-DD)"
-                value={dataSessao}
-                onChangeText={setDataSessao}
-                style={pacienteDetalheStyles.input}
-            />
-            <TextInput 
-                placeholder="Notas"
-                value={notaSessao}
-                onChangeText={setNotaSessao}
-                style={pacienteDetalheStyles.input}
-            />
-            <Button title="Agendar" onPress={agendarSessao} />
+        <PaperProvider>
+            <KeyboardAvoidingView 
+                style={{ flex: 1 }}
+                behavior="height"
+            >
+                <View style={pacienteDetalheStyles.container}>
+                    <Text variant="titleLarge" style={pacienteDetalheStyles.header}>
+                        Nome: {paciente.nome}
+                    </Text>
+                    <Text variant="titleMedium" style={pacienteDetalheStyles.titulo}>
+                        Sessões:
+                    </Text>
+                    <FlatList
+                        data={sessoes}
+                        keyExtractor={(item) => item._id}
+                        renderItem={renderItem}
+                        keyboardShouldPersistTaps="handled"
+                        contentContainerStyle={{ paddingBottom: 20 }}
+                        ListEmptyComponent={() => (
+                            <Text style={{ textAlign: "center", marginTop: 20 }}>
+                                Nenhuma sessão encontrada.
+                            </Text>
+                        )}
+                    />
+                    <Text variant="titleMedium" style={pacienteDetalheStyles.titulo}>
+                        Agendar nova sessão:
+                    </Text>
+                    <TextInput
+                        label="Data (YYYY-MM-DD)"
+                        mode="outlined"
+                        value={dataSessao}
+                        onChangeText={setDataSessao}
+                        style={pacienteDetalheStyles.input}
+                        placeholder="YYYY-MM-DD"
+                    />
+                    <TextInput
+                        label="Notas"
+                        mode="outlined"
+                        value={notaSessao}
+                        onChangeText={setNotaSessao}
+                        multiline
+                        style={pacienteDetalheStyles.input}
+                        placeholder="Notas sobre a sessão"
+                    />
+                    <Button mode="contained" onPress={agendarSessao}>
+                        Agendar
+                    </Button>
+                </View>
+            </KeyboardAvoidingView>
 
-            {/* Modal Editar */}
-            <Modal visible={modalEditar} transparent animationType="slide">
-                <View style={modalStyles.modalBackground}>
-                    <View style={modalStyles.modalContainer}>
-                        <Text>Editar Sessão</Text>
-                        <TextInput 
-                            style={pacienteDetalheStyles.input}
+            <Portal>
+                <Dialog visible={modalEditar} onDismiss={() => setModalEditar(false)}>
+                    <Dialog.Title>Editar Sessão</Dialog.Title>
+                    <Dialog.Content>
+                        <TextInput
+                            label="Nova Data (YYYY-MM-DD)"
+                            mode="outlined"
                             value={novaData}
                             onChangeText={setNovaData}
+                            style={{ marginBottom: 12 }}
+                            placeholder="YYYY-MM-DD"
                         />
-                        <TextInput 
-                            style={pacienteDetalheStyles.input}
+                        <TextInput
+                            label="Novas Notas"
+                            mode="outlined"
                             value={novasNotas}
                             onChangeText={setNovasNotas}
+                            multiline
+                            style={{ marginBottom: 12 }}
+                            placeholder="Notas atualizadas"
                         />
-                        <Button title="Salvar" onPress={confirmarEdicao} />
-                        <Button title="Cancelar" onPress={() => setModalEditar(false)} />
-                    </View>
-                </View>
-            </Modal>
-
-            {/* Modal Cancelar */}
-            <Modal visible={modalCancelar} transparent animationType="slide">
-                <View style={modalStyles.modalBackground}>
-                    <View style={modalStyles.modalContainer}>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={confirmarEdicao}>Salvar</Button>
+                        <Button onPress={() => setModalEditar(false)}>Cancelar</Button>
+                    </Dialog.Actions>
+                </Dialog>
+            
+            
+                <Dialog visible={modalCancelar} onDismiss={() =>
+                setModalCancelar(false)}>
+                    <Dialog.Title>Cancelar Sessão</Dialog.Title>
+                    <Dialog.Content>
                         <Text>Tem certeza que deseja cancelar?</Text>
-                        <Button title="Sim" color="red" onPress={confirmarCancelamento} />
-                        <Button title="Não" onPress={() => setModalCancelar(false)} />
-                    </View>
-                </View>
-            </Modal>
-
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button textColor="red" onPress={confirmarCancelamento}>
+                            Sim
+                        </Button>
+                        <Button onPress={() => setModalCancelar(false)}>Não</Button>
+                    </Dialog.Actions>
+                </Dialog>
+            
             {/* Modal Finalizar */}
-            <Modal visible={modalFinalizar} transparent animationType="slide">
-                <View style={modalStyles.modalBackground}>
-                    <View style={modalStyles.modalContainer}>
-                        <Text>Finalizar Sessão</Text>
-                        <TextInput 
-                            style={pacienteDetalheStyles.input}
-                            placeholder="Valor da consulta"
+            
+                <Dialog visible={modalFinalizar} onDismiss={() =>
+                setModalFinalizar(false)}>
+                    <Dialog.Title>Finalizar Sessão</Dialog.Title>
+                    <Dialog.Content>
+                        <TextInput
+                            label="Valor da consulta"
+                            mode="outlined"
                             value={valorFinal}
                             onChangeText={setValorFinal}
                             keyboardType="numeric"
+                            placeholder="R$ 0,00"
                         />
-                        <Button title="Finalizar" onPress={confirmarFinalizacao} />
-                        <Button title="Cancelar" onPress={() => setModalFinalizar(false)} />
-                    </View>
-                </View>
-            </Modal>
-        </View>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={confirmarFinalizacao}>Finalizar</Button>
+                        <Button onPress={() => setModalFinalizar(false)}>Cancelar</Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
+        </PaperProvider>
     );
 }

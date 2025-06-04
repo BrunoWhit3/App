@@ -2,28 +2,32 @@ import { StyleSheet } from "react-native";
 
 export const feedbackStyles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        padding: 20,
+        backgroundColor: '#fff'
     },
     contentContainer: {
-        flexGrow: 1,
-        justifyContent: 'center',
-        padding: 20
+        paddingBottom: 30,
     },
-    titulo: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20
+    card: {
+        padding: 20,
+        borderRadius: 10,
+        marginBottom: 20,
+        elevation: 3
     },
     input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
-        padding: 10,
         marginBottom: 10
     },
     resultado: {
-        fontSize: 18,
-        fontWeight: 'bold',
+        fontSize: 16,
+        color: '#333',
         marginTop: 20
+    },
+    button: {
+        marginTop: 10,
+        borderRadius: 5
+    },
+    historicoButton: {
+        marginTop: 10
     }
 });

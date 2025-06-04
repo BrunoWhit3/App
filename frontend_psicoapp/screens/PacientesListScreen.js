@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, Button, ActivityIndicator } from "react-native";
+import { View, FlatList } from "react-native";
+import { Appbar, Card, Button, ActivityIndicator, Text } from 'react-native-paper';
 import { API_URL } from "../config";
 import { pacientesListStyles } from '../styles/pacientesListStyles';
 import { loadingStyles } from "../styles/loadingStyles";
@@ -25,12 +26,26 @@ export default function PacientesListScreen({ navigation }) {
     };
 
     const renderItem = ({ item }) => (
-        <View style={pacientesListStyles.card}>
-            <Text>Paciente: {item.nome}</Text>
-            <Button title="Ver Sessões" onPress={() => navigation.navigate('PacienteDetalhe', { paciente: item })} />
-            <Button title="Ver Diário do Paciente" onPress={() => navigation.navigate('DiarioPaciente', { paciente: item })} />
-            <Button title="Ver Feedbacks do Paciente" onPress={() => navigation.navigate('FeedbackPaciente', { paciente: item })} />
-        </View>
+        <Card style={pacientesListStyles.card} mode="outlined">
+            <Card.Title title={item.nome} />
+            <View style={pacientesListStyles.actionContainer}>
+                <Button mode="contained" onPress={() => navigation.navigate('DiarioPaciente',
+                { paciente: item })} style={pacientesListStyles.button} labelStyle={pacientesListStyles.buttonLabel}
+                >
+                    Ver Diário
+                </Button>
+                <Button mode="contained" onPress={() => navigation.navigate('FeedbackPaciente', {
+                paciente: item })} style={pacientesListStyles.button} labelStyle={pacientesListStyles.buttonLabel}
+                >
+                    Ver Feedbacks
+                </Button>
+                <Button mode="contained" onPress={() => navigation.navigate('PacienteDetalhe', { paciente: item })} 
+                style={pacientesListStyles.button} labelStyle={pacientesListStyles.buttonLabel}
+                >
+                    Ver Sessões
+                </Button>
+            </View>
+        </Card>
     );
 
     if (loading) {
@@ -43,14 +58,13 @@ export default function PacientesListScreen({ navigation }) {
     }
 
     return (
-        <View style={pacientesListStyles.container}>
-            <Text style={pacientesListStyles.titulo}>Seus Pacientes</Text>
+        <View>
             {pacientes.length > 0 ? (
-                <FlatList 
+                <FlatList
                     data={pacientes}
                     keyExtractor={(item) => item._id}
                     renderItem={renderItem}
-                    contentContainerStyle={{ paddingBottom: 20 }}
+                    contentContainerStyle={pacientesListStyles.listContainer}
                 />
             ) : (
                 <Text style={pacientesListStyles.noRecordsText}>Nenhum Paciente Registrado</Text>

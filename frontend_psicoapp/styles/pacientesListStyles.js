@@ -3,17 +3,30 @@ import { StyleSheet } from "react-native";
 export const pacientesListStyles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20
+        backgroundColor: '#f6f6f6',
+    },
+    listContainer: {
+        padding: 16
     },
     card: {
-        padding: 10,
-        borderWidth: 1,
-        marginBottom: 10
+        marginBottom: 16,
+        borderRadius: 12,
+        elevation: 2
     },
-    titulo: {
-        fontSize: 24,
-        marginBottom: 20,
-        fontWeight: 'bold'
+    actionContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        paddingHorizontal: 8,
+        paddingBottom: 12,
+        gap: 8
+    },
+    button: {
+        flexGrow: 1,
+        flexBasis: '48%'
+    },
+    buttonLabel: {
+        fontSize: 14
     },
     noRecordsText: {
         textAlign: 'center',

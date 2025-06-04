@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, FlatList, Alert, ActivityIndicator } from "react-native";
+import { View, FlatList } from "react-native";
+import { Appbar, Card, ActivityIndicator, Text } from 'react-native-paper';
 import { UserContext } from "../userContext";
 import { API_URL } from "../config";
 import { loadingStyles } from "../styles/loadingStyles";
@@ -27,37 +28,44 @@ export default function FeedbackUserScreen({ navigation }) {
     };
 
     const renderItem = ({ item }) => (
-        <View style={feedbackPacienteStyles.card}>
-            <Text style={feedbackPacienteStyles.date}>
-                {new Date(item.date).toLocaleDateString('pt-BR')} às {new Date(item.date).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'})}
-            </Text>
-            <Text style={feedbackPacienteStyles.item}>Estresse: {item.estresse}</Text>
-            <Text style={feedbackPacienteStyles.item}>Ansiedade: {item.ansiedade}</Text>
-            <Text style={feedbackPacienteStyles.item}>Tristeza: {item.tristeza}</Text>
-            <Text style={feedbackPacienteStyles.item}>Desânimo: {item.desanimo}</Text>
-            <Text style={feedbackPacienteStyles.item}>Comentário: {item.feedback}</Text>
-        </View>
+        <Card style={feedbackPacienteStyles.card} mode="outlined">
+            <Card.Title
+                title={`Data: ${new Date(item.date).toLocaleDateString('pt-BR')} às ${new
+                Date(item.date).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'})}`}
+            />
+            <Card.Content>
+                <Text variant="bodyMedium">Estresse: {item.estresse}</Text>
+                <Text variant="bodyMedium">Ansiedade: {item.ansiedade}</Text>
+                <Text variant="bodyMedium">Tristeza: {item.tristeza}</Text>
+                <Text variant="bodyMedium">Desânimo: {item.desanimo}</Text>
+                <Text variant="bodyMedium">Comentário: {item.feedback}</Text>
+            </Card.Content>
+        </Card>
+
     );
 
     if (loading) {
         return (
             <View style={loadingStyles.loadingContainer}>
                 <ActivityIndicator size="large" color="#6a0dad" />
-                <Text style={loadingStyles.loadingText}>Carregando diário...</Text>
+                <Text style={loadingStyles.loadingText}>Carregando Feedbacks...</Text>
             </View>
         );
     }
 
     return (
         <View style={feedbackPacienteStyles.container}>
-            <Text style={feedbackPacienteStyles.titulo}>Seus Feedbacks</Text>
+            <Appbar.Header>
+                <Appbar.BackAction onPress={() => navigation.goBack()} />
+                <Appbar.Content title="Seus Feedbacks" />
+            </Appbar.Header>
             {feedbacks.length > 0 ? (
-                <FlatList 
-                    data={feedbacks} 
-                    keyExtractor={(item) => item._id} 
-                    renderItem={renderItem} 
-                    contentContainerStyle={{ paddingBottom: 20 }}
-                />
+            <FlatList
+                data={feedbacks}
+                keyExtractor={(item) => item._id}
+                renderItem={renderItem}
+                contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 10 }}
+            />
             ) : (
                 <Text style={feedbackPacienteStyles.noRecordsText}>Nenhum Feedback encontrado.</Text>
             )}

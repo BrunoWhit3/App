@@ -4,15 +4,21 @@ export const homeStyles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        padding: 20
+        padding: 24,
+        backgroundColor: '#f5f5f5'
     },
     welcome: {
-        fontSize: 20,
-        marginBottom: 20
+        fontSize: 24,
+        marginBottom: 40,
+        textAlign: 'center',
+        color: '#333'
     },
-    link: {
-        color: '#007BFF',
-        marginTop: 10,
-        textAlign: 'center'
+    button: {
+        marginVertical: 8,
+        borderRadius: 8
+    },
+    logout: {
+        marginTop: 20,
+        alignSelf: 'center'
     }
 });

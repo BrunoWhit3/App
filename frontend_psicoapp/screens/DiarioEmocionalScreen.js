@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, TextInput, FlatList, Alert, TouchableOpacity, Button, ActivityIndicator, ScrollView, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView } from "react-native";
+import { View, Alert, ScrollView, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView } from "react-native";
+import { Text, TextInput, Button, ActivityIndicator, Snackbar, Surface }from "react-native-paper";
 import { UserContext } from "../userContext";
 import { API_URL } from "../config";
 import { diarioStyles } from '../styles/diarioStyles';
@@ -9,6 +10,8 @@ export default function DiarioEmocionalScreen({ navigation }) {
     const [humorGeral, setHumorGeral] = useState('');
     const [descricao, setDescricao] = useState('');
     const [saving, setSaving] = useState(false);
+    const [snackbarVisible, setSnackbarVisible] = useState(false);
+    const [snackbarMsg, setSnackbarMsg] = useState('');
 
     const humorEmojis = {
         'Muito Feliz': '😄', 'Feliz': '😊', 'Neutro': '😐', 'Triste': '😞',
@@ -17,7 +20,8 @@ export default function DiarioEmocionalScreen({ navigation }) {
 
     const salvarRegistro = async () => {
         if (!humorGeral || !descricao.trim()) {
-            Alert.alert('Atenção', 'Selecione um humor e digite uma descrição.');
+            setSnackbarMsg('Selecione um humor e digite uma descrição.'); 
+            setSnackbarVisible(true); 
             return;
         }
 
@@ -30,10 +34,12 @@ export default function DiarioEmocionalScreen({ navigation }) {
             });
             setHumorGeral('');
             setDescricao('');
-            Alert.alert('Sucesso', 'Entrada salva no Diário');
+            setSnackbarMsg('Entrada salva no Diário!'); 
+            setSnackbarVisible(true); 
         } catch (error) {
             console.error('Erro:', error);
-            Alert.alert('Erro ao salvar:', error.message);
+            setSnackbarMsg(error.message); 
+            setSnackbarVisible(true); 
         } finally {
             setSaving(false);
         }
@@ -41,37 +47,60 @@ export default function DiarioEmocionalScreen({ navigation }) {
 
     
 
-    return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <KeyboardAvoidingView 
-                behavior="height" 
-                style={diarioStyles.container}
-            >
-                <ScrollView contentContainerStyle={diarioStyles.contentContainer}>
-                    <Text style={diarioStyles.title}>Diário Emocional</Text>
-                    <Text style={diarioStyles.subtitle}>Como você se sente?</Text>
-                    <View style={diarioStyles.moodSelector}>
-                        {Object.keys(humorEmojis).map(humor => (
-                            <TouchableOpacity key={humor} style={[diarioStyles.moodButton, humorGeral === humor && diarioStyles.                 selectedMoodButton]} onPress={() => setHumorGeral(humor)}>                   
-                                <Text style={diarioStyles.moodEmoji}>{humorEmojis[humor]}</Text>
-                                <Text style={diarioStyles.moodText}>{humor}</Text>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
-                    <TextInput style={diarioStyles.input} 
-                        placeholder="Descreva..." 
-                        value={descricao}
-                        onChangeText={setDescricao} 
+    return ( 
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}> 
+            <KeyboardAvoidingView behavior="height" style={diarioStyles.container}> 
+                <ScrollView contentContainerStyle={diarioStyles.contentContainer}> 
+                    <Text variant="headlineMedium" style={{ marginBottom: 12 }}>
+                        Diário Emocional
+                    </Text> 
+                    <Text variant="titleMedium" style={{ marginBottom: 20 }}>
+                        Como você se sente?
+                    </Text> 
+                    <View style={diarioStyles.moodSelector}> 
+                        {Object.entries(humorEmojis).map(([humor, emoji]) => ( 
+                        <Surface 
+                            key={humor} 
+                            elevation={humorGeral === humor ? 6 : 2} 
+                            style={[ 
+                            diarioStyles.moodButton, 
+                            humorGeral === humor && diarioStyles.selectedMoodButton 
+                            ]} 
+                            onTouchEnd={() => setHumorGeral(humor)} 
+                        > 
+                            <Text style={diarioStyles.moodEmoji}>{emoji}</Text> 
+                            <Text style={diarioStyles.moodText}>{humor}</Text> 
+                        </Surface> 
+                        ))} 
+                    </View> 
+                    <TextInput 
+                        label="Descreva seus sentimentos" 
+                        mode="outlined" 
                         multiline 
-                    />
-                    {saving ? (
-                        <ActivityIndicator size='large' color='#007BFF' />
-                    ) : (
-                        <Button title="Salvar no Diário" onPress={salvarRegistro} />
-                    )}
-                    <Button title="Histórico de Registros" onPress={() => navigation.navigate('DiarioUser')} />
-                </ScrollView>
-            </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
-    );
+                        numberOfLines={4} 
+                        value={descricao} 
+                        onChangeText={setDescricao} 
+                        style={{ marginVertical: 20 }} 
+                    /> 
+                    {saving ? ( 
+                        <ActivityIndicator animating size="large" /> 
+                    ) : ( 
+                        <Button mode="contained" onPress={salvarRegistro} style={{ marginBottom: 10 }}> 
+                        Salvar no Diário 
+                        </Button> 
+                    )} 
+                    <Button mode="outlined" onPress={() => navigation.navigate('DiarioUser')}> 
+                        Histórico de Registros 
+                    </Button> 
+                    <Snackbar 
+                        visible={snackbarVisible} 
+                        onDismiss={() => setSnackbarVisible(false)} 
+                        duration={3000} 
+                    > 
+                        {snackbarMsg} 
+                    </Snackbar> 
+                </ScrollView> 
+            </KeyboardAvoidingView> 
+        </TouchableWithoutFeedback> 
+  ); 
 }

@@ -3,17 +3,18 @@ import { StyleSheet } from "react-native";
 export const financiasStyles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
-    },
-    titulo: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20
+        backgroundColor: '#f6f6f6',
     },
     card: {
-        padding: 20,
-        borderWidth: 1,
-        marginBottom: 10
+        marginVertical: 8,
+        marginHorizontal: 4,
+        borderRadius: 8,
+    },
+    titulo: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        padding: 16,
+        color: '#6a0dad',
     },
     noRecordsText: {
         textAlign: 'center',

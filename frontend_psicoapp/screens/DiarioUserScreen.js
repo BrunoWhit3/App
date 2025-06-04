@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
-import { View, Text, FlatList, ActivityIndicator } from "react-native";
+import { View, FlatList } from "react-native";
+import { Text, ActivityIndicator, Card } from "react-native-paper";
 import { UserContext } from "../userContext";
 import { API_URL } from "../config";
 import { diarioPacienteStyles } from '../styles/diarioPacienteStyles';
@@ -29,10 +30,18 @@ export default function DiarioUserScreen({ navigation }) {
     };
     
     const renderItem = ({ item }) => (
-        <View style={diarioPacienteStyles.registroCard}>
-            <Text style={diarioPacienteStyles.registroDate}>{new Date(item.date).toLocaleDateString()} às {new Date(item.date).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'})}</Text>
-            <Text style={diarioPacienteStyles.registroText}>{item.text}</Text>
-        </View>
+        <Card style={diarioPacienteStyles.registroCard}>
+            <Card.Title
+                title={new Date(item.date).toLocaleDateString("pt-BR")}
+                subtitle={`às ${new Date(item.date).toLocaleTimeString("pt-BR", { hour: "2-digit",
+                minute: "2-digit" })}`}
+                titleStyle={{ fontSize: 16 }}
+                subtitleStyle={{ fontSize: 12 }}
+            />
+            <Card.Content>
+                <Text variant="bodyMedium">{item.text}</Text>
+            </Card.Content>
+        </Card>
     );
 
     if (loading) {
@@ -46,17 +55,18 @@ export default function DiarioUserScreen({ navigation }) {
 
     return (
         <View style={diarioPacienteStyles.container}>
-            <Text style={diarioPacienteStyles.titulo}>Seu Diário</Text>
+            <Text variant="headlineMedium" style={diarioPacienteStyles.titulo}>Seu Diário</Text>
             {registros.length > 0 ? (
-                <FlatList 
+                <FlatList
                     data={registros}
-                    keyExtractor={item => item._id}
-                    renderItem={renderItem} 
+                    keyExtractor={(item) => item._id}
+                    renderItem={renderItem}
                     style={diarioPacienteStyles.list}
                     contentContainerStyle={{ paddingBottom: 20 }}
                 />
             ) : (
-                <Text style={diarioPacienteStyles.noRecordsText}>Nenhum registro de Diario encontrado.</Text>
+                <Text style={diarioPacienteStyles.noRecordsText}>Nenhum registro de diário
+                encontrado.</Text>
             )}
         </View>
     );

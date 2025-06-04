@@ -5,11 +5,11 @@ export const loadingStyles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#f0f4f8'
+        backgroundColor: '#f6f6f6'
     },
     loadingText: {
-        marginTop: 10,
+        marginTop: 12,
         fontSize: 16,
-        color: '#555'
+        color: '#6a0dad'
     }
 });

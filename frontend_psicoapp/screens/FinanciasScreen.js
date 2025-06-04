@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, FlatList, ActivityIndicator } from "react-native";
+import { View, FlatList } from "react-native";
+import { Appbar, Card, ActivityIndicator, Text } from 'react-native-paper';
 import { UserContext } from "../userContext";
 import { API_URL } from "../config";
 import { financiasStyles } from '../styles/financiasStyles';
 import { loadingStyles } from "../styles/loadingStyles";
 
-export default function FinanciasScreen() {
+export default function FinanciasScreen({ navigation }) {
     const { user } = useContext(UserContext);
     const [relatorios, setRelatorios] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -34,13 +35,15 @@ export default function FinanciasScreen() {
     };
 
     const renderItem = ({ item }) => (
-        <View style={financiasStyles.card}>
-            <Text>{new Date(item.date).toLocaleDateString('pt-BR')}</Text>
-            <Text>Paciente: {item.paciente.nome}</Text>
-            <Text>Doutor: {item.psicologo.nome}</Text>
-            <Text>Valor: R${item.pagamento}</Text>
-            <Text>Imposto: R${item.imposto}</Text>
-        </View>
+        <Card style={financiasStyles.card} mode="outlined">
+            <Card.Title title={`Data: ${new Date(item.date).toLocaleDateString('pt-BR')}`} />
+            <Card.Content>
+                <Text variant="bodyMedium">Paciente: {item.paciente.nome}</Text>
+                <Text variant="bodyMedium">Doutor: {item.psicologo.nome}</Text>
+                <Text variant="bodyMedium">Valor: R$ {item.pagamento.toFixed(2)}</Text>
+                <Text variant="bodyMedium">Imposto: R$ {item.imposto.toFixed(2)}</Text>
+            </Card.Content>
+        </Card>
     );
 
     if (loading) {
@@ -54,13 +57,16 @@ export default function FinanciasScreen() {
 
     return (
         <View style={financiasStyles.container}>
-            <Text style={financiasStyles.titulo}>Relatórios Financeiros</Text>
+            <Appbar.Header>
+                <Appbar.BackAction onPress={() => navigation.goBack()} />
+                <Appbar.Content title="Relatórios Financeiros" /> 
+            </Appbar.Header>
             {relatorios.length > 0 ? (
-                <FlatList 
+                <FlatList
                     data={relatorios}
                     keyExtractor={(item) => item._id}
                     renderItem={renderItem}
-                    contentContainerStyle={{ paddingBottom: 20 }}
+                    contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 10 }}
                 />
             ) : (
                 <Text style={financiasStyles.noRecordsText}>Nenhum Relatório encontrado.</Text>

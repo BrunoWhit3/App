@@ -2,22 +2,26 @@ import { StyleSheet } from "react-native";
 
 export const cadastroStyles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: "#fff",
     },
     contentContainer: {
+        padding: 20,
         flexGrow: 1,
-        justifyContent: 'center',
-        padding: 20
+        justifyContent: "center",
     },
-    titulo: {
-        fontSize: 24,
+    title: {
         marginBottom: 20,
-        textAlign: 'center'
+        color: "#6a0dad",
+        alignSelf: "center",
     },
     input: {
-        borderWidth: 1,
-        padding: 10,
-        marginBottom: 10,
-        borderRadius: 5
-    }
+        marginBottom: 15,
+    },
+    toggleButton: {
+        marginVertical: 10,
+    },
+    submitButton: {
+        marginTop: 10,
+    },
 });
