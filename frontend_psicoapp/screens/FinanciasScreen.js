@@ -16,7 +16,14 @@ export default function FinanciasScreen() {
 
     const carregarRelatorios = async () => {
         try {
-            const response = await fetch(`${API_URL}/financias/${user.id}`);
+            const rota = user.tipoUsuario === 'psicologo' ? `${API_URL}/financias/${user.id}` : `${API_URL}/financias/paciente/${user.id}`;
+
+            const response = await fetch(rota);
+            if (!response.ok) {
+                const texto = await response.text();
+                console.error('Erro na API:', texto);
+                return;
+            }
             const data = await response.json();
             setRelatorios(data);
         } catch (error) {
@@ -29,6 +36,8 @@ export default function FinanciasScreen() {
     const renderItem = ({ item }) => (
         <View style={financiasStyles.card}>
             <Text>{new Date(item.date).toLocaleDateString('pt-BR')}</Text>
+            <Text>Paciente: {item.paciente.nome}</Text>
+            <Text>Doutor: {item.psicologo.nome}</Text>
             <Text>Valor: R${item.pagamento}</Text>
             <Text>Imposto: R${item.imposto}</Text>
         </View>

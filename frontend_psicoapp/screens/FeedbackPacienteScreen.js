@@ -42,14 +42,14 @@ export default function FeedbackUserScreen({ route }) {
         return (
             <View style={loadingStyles.loadingContainer}>
                 <ActivityIndicator size="large" color="#6a0dad" />
-                <Text style={loadingStyles.loadingText}>Carregando diário...</Text>
+                <Text style={loadingStyles.loadingText}>Carregando feedbacks...</Text>
             </View>
         );
     }
 
     return (
         <View style={feedbackPacienteStyles.container}>
-            <Text style={feedbackPacienteStyles.titulo}>Seus Feedbacks</Text>
+            <Text style={feedbackPacienteStyles.titulo}>Feedbacks de {paciente.nome}</Text>
             {feedbacks.length > 0 ? (
                 <FlatList 
                     data={feedbacks} 

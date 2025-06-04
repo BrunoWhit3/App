@@ -44,7 +44,7 @@ export default function PacientesListScreen({ navigation }) {
 
     return (
         <View style={pacientesListStyles.container}>
-            <Text style={pacientesListStyles.titulo}>Lista de Pacientes</Text>
+            <Text style={pacientesListStyles.titulo}>Seus Pacientes</Text>
             {pacientes.length > 0 ? (
                 <FlatList 
                     data={pacientes}
