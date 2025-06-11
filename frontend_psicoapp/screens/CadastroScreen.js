@@ -53,9 +53,11 @@ export default function CadastroScreen({ navigation }) {
             const data = await response.json();
 
             if (response.ok) {
-                setSnackbarMsg(data.message || "Cadastro realizado com sucesso!"); 
-                setSnackbarVisible(true);
-                setTimeout(() => navigation.goBack(), 3000);
+                Alert.alert(
+                    'Sucesso',
+                    'Cadastro realizado com sucesso! Agora você pode fazer o login.',
+                    [{ text: 'Fazer login', onPress: () => navigation.goBack() }] 
+                );
             } else {
                 setSnackbarMsg(data.message);
                 setSnackbarVisible(true);
