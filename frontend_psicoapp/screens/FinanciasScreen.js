@@ -6,7 +6,7 @@ import { API_URL } from "../config";
 import { financiasStyles } from '../styles/financiasStyles';
 import { loadingStyles } from "../styles/loadingStyles";
 
-export default function FinanciasScreen({ navigation }) {
+export default function FinanciasScreen() {
     const { user } = useContext(UserContext);
     const [relatorios, setRelatorios] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -57,10 +57,7 @@ export default function FinanciasScreen({ navigation }) {
 
     return (
         <View style={financiasStyles.container}>
-            <Appbar.Header>
-                <Appbar.BackAction onPress={() => navigation.goBack()} />
-                <Appbar.Content title="Relatórios Financeiros" /> 
-            </Appbar.Header>
+            <Text variant="headlineMedium" style={{ margin: 18 }}>Relatórios Financeiros</Text>
             {relatorios.length > 0 ? (
                 <FlatList
                     data={relatorios}

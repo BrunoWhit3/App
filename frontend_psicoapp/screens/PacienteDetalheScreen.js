@@ -103,7 +103,7 @@ export default function PacienteDetalheScreen({ route }) {
         <Card style={pacienteDetalheStyles.card} mode="outlined">
             <Card.Content>
                 <Text variant="titleMedium" style={{ marginBottom: 4 }}>
-                    {new Date(item.date).toLocaleDateString()} - {item.status}
+                    Sessão: {new Date(item.date).toLocaleDateString()} - {item.status}
                 </Text>
                 {item.status === "cancelado" && <Text variant="bodySmall" style={{ color: 'red' }}>Sessão Desmarcada</Text>}
                 {item.status === "finalizada" && <Text variant="bodySmall" style={{ color: 'gray' }}>Sessão Finalizada</Text>}
@@ -116,7 +116,6 @@ export default function PacienteDetalheScreen({ route }) {
                 )}
             </Card.Content>
         </Card>
-
     );
 
     if (loading) {

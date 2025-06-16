@@ -7,6 +7,8 @@ import { UserContext, UserProvider } from "./userContext";
 
 import LoginScreen from './screens/LoginScreen';
 import CadastroScreen from './screens/CadastroScreen';
+import HomePaciente from "./screens/HomePacienteTabs";
+import HomePsicologo from "./screens/HomePsicologoTabs";
 import HomeScreen from './screens/HomeScreen';
 import DiarioEmocionalScreen from './screens/DiarioEmocionalScreen';
 import DiarioUserScreen from "./screens/DiarioUserScreen";
@@ -40,15 +42,18 @@ export default function App() {
               <Stack.Navigator>
                 {isLoading ? (
                   <Stack.Screen name="Loading" component={LoadingScreen} />
-                ) : user ? (
+                ) : user?.tipoUsuario === 'paciente' ? (
                   <>
-                    <Stack.Screen name="Home" component={HomeScreen} options={{title: 'Psyco-App -- Home'}} />
-                    <Stack.Screen name="Diario" component={DiarioEmocionalScreen} options={{title: 'Diário Emocional'}} />
+                    <Stack.Screen name="Home" component={HomePaciente} options={{headerShown: false}} />
+                    {/* <Stack.Screen name="Diario" component={DiarioEmocionalScreen} options={{title: 'Diário Emocional'}} /> */}
                     <Stack.Screen name="DiarioUser" component={DiarioUserScreen} options={{title: 'Registros do Diário'}} />
-                    <Stack.Screen name="Feedback" component={FeedbackScreen} options={{title: 'Feedback Emocional'}} />
+                    {/* <Stack.Screen name="Feedback" component={FeedbackScreen} options={{title: 'Feedback Emocional'}} /> */}
                     <Stack.Screen name="FeedbackUser" component={FeedbackUserScreen} options={{headerShown: false}} />
-                    <Stack.Screen name="Financias" component={FinanciasScreen} options={{headerShown: false}} />
-                    <Stack.Screen name="PacientesList" component={PacientesListScreen} options={{title: 'Lista de Pacientes'}} />
+                    {/* <Stack.Screen name="Financias" component={FinanciasScreen} options={{headerShown: false}} /> */}
+                  </>
+                ) : user?.tipoUsuario === 'psicologo' ? (
+                  <>
+                    <Stack.Screen name="Home" component={HomePsicologo} options={{headerShown: false}} />
                     <Stack.Screen name="PacienteDetalhe" component={PacienteDetalheScreen} options={{title: 'Sessões Agendadas'}} />
                     <Stack.Screen name="DiarioPaciente" component={DiarioPacienteScreen} options={{title: 'Diário do Paciente'}} />
                     <Stack.Screen name="FeedbackPaciente" component={FeedbackPacienteScreen} options={{headerShown: false}} />
