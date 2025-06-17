@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { View, FlatList } from "react-native";
+import { View, FlatList, ScrollView } from "react-native";
 import { Text, ActivityIndicator, Card } from "react-native-paper";
 import { API_URL } from "../config";
 import { diarioPacienteStyles } from '../styles/diarioPacienteStyles';
 import { loadingStyles } from "../styles/loadingStyles";
+
+const emojiMap = {
+    'Muito Feliz': '😄', 'Feliz': '😊', 'Neutro': '😐', 'Triste': '😞',
+    'Ansioso': '😟', 'Irritado': '😡', 'Cansado': '😴', 'Grato': '🙏'
+};
 
 export default function DiarioPacienteScreen({ route }) {
     const { paciente } = route.params;
@@ -27,21 +32,16 @@ export default function DiarioPacienteScreen({ route }) {
             setLoading(false);
         }
     };
-    
-    const renderItem = ({ item }) => (
-        <Card style={diarioPacienteStyles.registroCard}>
-            <Card.Title
-                title={new Date(item.date).toLocaleDateString("pt-BR")}
-                subtitle={`às ${new Date(item.date).toLocaleTimeString("pt-BR", { hour: "2-digit",
-                minute: "2-digit" })}`}
-                titleStyle={{ fontSize: 16 }}
-                subtitleStyle={{ fontSize: 12 }}
-            />
-            <Card.Content>
-                <Text variant="bodyMedium">{item.text}</Text>
-            </Card.Content>
-        </Card>
-    );
+
+    const parseEntrada = (entrada) => {
+        const [humor, ...descricaoParts] = entrada.text.split(':');
+        const descricao = descricaoParts.join(':').trim();
+        return {
+            humor: humor.trim(),
+            emoji: emojiMap[humor.trim()], 
+            descricao
+        };
+    };
 
     if (loading) {
         return (
@@ -53,20 +53,26 @@ export default function DiarioPacienteScreen({ route }) {
     }
 
     return (
-        <View style={diarioPacienteStyles.container}>
-            <Text variant="headlineMedium" style={diarioPacienteStyles.titulo}>Diário de {paciente.nome}</Text>
+        <ScrollView style={diarioPacienteStyles.container}>
+            <Text style={diarioPacienteStyles.titulo}>Histórico do Diário de {paciente.nome}:</Text>
             {registros.length > 0 ? (
-                <FlatList
-                    data={registros}
-                    keyExtractor={(item) => item._id}
-                    renderItem={renderItem}
-                    style={diarioPacienteStyles.list}
-                    contentContainerStyle={{ paddingBottom: 20 }}
-                />
+                registros.map((registro) => {
+                    const { humor, emoji, descricao } = parseEntrada(registro);
+                    const dataFormatada = new Date(registro.date).toLocaleDateString();
+
+                    return (
+                        <View key={registro._id} style={diarioPacienteStyles.card}>
+                            <View style={diarioPacienteStyles.cardHeader}>
+                                <Text style={diarioPacienteStyles.cardDate}>{dataFormatada}</Text>
+                                <Text style={diarioPacienteStyles.cardEmoji}>{emoji}</Text>
+                            </View>
+                            <Text style={diarioPacienteStyles.cardDescricao}>{descricao}</Text>
+                        </View>
+                    );
+                })
             ) : (
-                <Text style={diarioPacienteStyles.noRecordsText}>Nenhum registro de diário
-                encontrado.</Text>
+                <Text style={diarioPacienteStyles.noRecordsText}>Nenhum registro de diario.</Text>
             )}
-        </View>
+        </ScrollView>
     );
 }

@@ -45,7 +45,7 @@ export default function ConsultasScreen() {
         return (
             <View style={loadingStyles.loadingContainer}>
                 <ActivityIndicator size="large" color="#6a0dad" />
-                <Text style={loadingStyles.loadingText}>Carregando diário...</Text>
+                <Text style={loadingStyles.loadingText}>Carregando consultas...</Text>
             </View>
         );
     }

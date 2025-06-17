@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Alert } from "react-native";
-import { Appbar } from "react-native-paper";
+import { Appbar, Text } from "react-native-paper";
 import { UserContext } from "../userContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ConsultasScreen from "./ConsultasScreen";

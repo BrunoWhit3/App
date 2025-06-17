@@ -2,36 +2,37 @@ import { StyleSheet } from "react-native";
 
 export const diarioPacienteStyles = StyleSheet.create({
     container: {
-        flex: 1,
         padding: 20,
-        backgroundColor: '#f0f4f8'
+        backgroundColor: '#f5f5f5'
     },
     titulo: {
-        fontSize: 22,
+        fontSize: 18,
         fontWeight: 'bold',
-        marginBottom: 20,
-        textAlign: 'center'
+        marginBottom: 15,
+        color: '#333'
     },
-    registroCard: {
+    card: {
         backgroundColor: '#fff',
         padding: 15,
         borderRadius: 10,
-        marginBottom: 10,
-        borderLeftWidth: 5,
-        borderLeftColor: '#6a0dad',
-        elevation: 3
+        marginBottom: 12,
+        elevation: 2
     },
-    registroDate: {
-        fontSize: 12,
-        color: '#888',
-        marginBottom: 5
+    cardHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 8
     },
-    registroText: {
-        fontSize: 16,
+    cardDate: {
+        fontSize: 14,
+        color: '#666'
+    },
+    cardEmoji: {
+        fontSize: 20
+    },
+    cardDescricao: {
+        fontSize: 14,
         color: '#333'
-    },
-    list: {
-        flex: 1,
     },
     noRecordsText: {
         textAlign: 'center',

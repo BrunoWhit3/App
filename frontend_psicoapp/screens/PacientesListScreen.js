@@ -52,7 +52,7 @@ export default function PacientesListScreen({ navigation }) {
         return (
             <View style={loadingStyles.loadingContainer}>
                 <ActivityIndicator size="large" color="#6a0dad" />
-                <Text style={loadingStyles.loadingText}>Carregando diário...</Text>
+                <Text style={loadingStyles.loadingText}>Carregando lista de pacientes...</Text>
             </View>
         );
     }
