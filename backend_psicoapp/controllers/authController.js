@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-const PSICOLOGO_KEY = 'CHAVE-SECRETA-123';
+const PSICOLOGO_KEY = '171';
 
 export const register = async (req, res) => {
     const { nome, email, senha, tipoUsuario, accessKey } = req.body;
